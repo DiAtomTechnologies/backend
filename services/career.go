@@ -75,7 +75,10 @@ func (c *careerService) GetAllCareers() ([]models.Career, error) {
 
 	if err := query.Err(); err != nil {
 		return nil, err
-	}
+	} 
+     if len(result) == 0 {
+      return []models.Career{} , nil
+    }
 	return result, nil
 
 }
