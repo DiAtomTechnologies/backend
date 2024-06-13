@@ -25,11 +25,7 @@ func NewCareerController(career services.CareerService) CareerController {
 
 func (c *careerController) Save(ctx *gin.Context) {
 	var career models.Career
-	loc := time.FixedZone("IST", 5*60*60+30*60) // IST is UTC+5:30
-	now := time.Now().In(loc)
-	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
-
-    career.StartDate = today
+	career.StartDate = time.Now()
 	if err := ctx.BindJSON(&career); err != nil {
 		ctx.JSON(400, gin.H{
 			"status": "failed",
@@ -37,9 +33,9 @@ func (c *careerController) Save(ctx *gin.Context) {
 		})
 		return
 	}
-    career.EndDate = today.AddDate(0,0,career.ApplicationTime)
+	career.EndDate = career.StartDate.AddDate(0, 0, career.ApplicationTime)
 
-	err := c.Career.Save(career)
+    err := c.Career.Save(career)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"status": "failed",

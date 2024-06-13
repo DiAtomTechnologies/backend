@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/vikram761/backend/models"
 )
@@ -25,13 +26,14 @@ func NewCareerService(db *sql.DB) CareerService {
 func (c *careerService) Save(career models.Career) error {
 	var query string
 	var args []interface{}
+    fmt.Println(career)
 	switch career.WorkType {
 	case "job":
 		query = "INSERT INTO CAREERS(TITLE,LOCATION,WORKTYPE, DESCRIPTION, START_DATE, END_DATE, APPLICATION_TIME) VALUES ($1, $2, $3, $4, $5, $6, $7)"
-		args = []interface{}{career.Title, career.Location, career.WorkType, career.Description, career.StartDate, career.EndDate, career.ApplicationTime}
+		args = []interface{}{career.Title, strings.ToLower(career.Location), strings.ToLower(career.WorkType), career.Description, career.StartDate, career.EndDate, career.ApplicationTime}
 	case "internship", "event":
-		query = "INSERT INTO CAREERS(TITLE, LOCATION, WORKTYPE, DESCRIPTION, DURATION, DURATIONTYPE, START_DATE, END_DATE, APPLICATION_TIME) VALUES ($1, $2, $3, $4, $5, $6, $7, &8,&9)"
-		args = []interface{}{career.Title, career.Location, career.WorkType, career.Description, career.Duration, career.DurationType, career.StartDate, career.EndDate, career.ApplicationTime}
+		query = "INSERT INTO CAREERS(TITLE, LOCATION, WORKTYPE, DESCRIPTION, DURATION, DURATIONTYPE, START_DATE, END_DATE, APPLICATION_TIME) VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9)"
+		args = []interface{}{career.Title, strings.ToLower(career.Location), strings.ToLower(career.WorkType), career.Description, career.Duration, career.DurationType, career.StartDate, career.EndDate, career.ApplicationTime}
 	default:
 		return fmt.Errorf("Invalid worktype: %s", career.WorkType)
 	}

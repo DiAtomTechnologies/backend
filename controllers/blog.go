@@ -14,7 +14,7 @@ type BlogController interface {
 	Save(*gin.Context)
 	Delete(*gin.Context)
 	GetAll(*gin.Context)
-    GetOne(*gin.Context)
+	GetOne(*gin.Context)
 }
 
 func NewBlogController(blog services.BlogService) BlogController {
@@ -30,6 +30,10 @@ func (b *blogController) Save(ctx *gin.Context) {
 		})
 		return
 	}
+	user, _ := ctx.Get("user")
+	userModel, _ := user.(models.User)
+	blog.Author = userModel.Name
+
 	if err := models.ValidateBlog(blog); err != nil {
 		ctx.JSON(400, gin.H{
 			"status":   "failed",
@@ -71,7 +75,12 @@ func (b *blogController) Delete(ctx *gin.Context) {
 }
 
 func (b *blogController) GetAll(ctx *gin.Context) {
-	result, err := b.Blog.GetAll()
+	ctx.Header("Access-Control-Allow-Origin", "http://localhost:3000")
+	limit := ctx.Query("limit")
+	id := ctx.Query("id")
+	tag := ctx.Query("tag")
+
+	result, err := b.Blog.GetAll(limit, id, tag)
 
 	if err != nil {
 		ctx.JSON(400, gin.H{

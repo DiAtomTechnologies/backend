@@ -15,23 +15,30 @@ CREATE TABLE BLOG(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     imgurl VARCHAR(255) NOT NULL,
     heading VARCHAR(255) NOT NULL,
-    tag VARCHAR(100) NOT NULL,
+    tag VARCHAR(100) CHECK (tag IN ('TECHNOLOGY', 'INNOVATION')),
     description TEXT NOT NULL,
     content TEXT NOT NULL,
     author VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-CREATE OR REPLACE FUNCTION update_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at := CURRENT_TIMESTAMP;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+CREATE TABLE USERS (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email VARCHAR(225) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  role VARCHAR(20) CHECK (role IN ('ADMIN' , 'MANAGER'))
+);
 
-CREATE TRIGGER update_blog_timestamp
-BEFORE UPDATE ON BLOG
-FOR EACH ROW
-EXECUTE PROCEDURE update_timestamp();
+CREATE TABLE job_applications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    work_experience INT NOT NULL,
+    job_id UUID REFERENCES careers(id) ON DELETE CASCADE,
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
