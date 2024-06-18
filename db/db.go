@@ -8,8 +8,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func Connectdb(USER, PASSWD, HOSTDB, DBNAME string) *sql.DB {
-	connStr := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", USER, PASSWD, HOSTDB, DBNAME)
+func Connectdb(USER, PASSWD, HOSTDB, DBNAME, PORT string) *sql.DB {
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", USER, PASSWD, HOSTDB, PORT, DBNAME)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err.Error())

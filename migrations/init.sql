@@ -34,11 +34,12 @@ CREATE TABLE job_applications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(20) NOT NULL,
     address TEXT NOT NULL,
-    work_experience INT NOT NULL,
+    work_experience INT,
     job_id UUID REFERENCES careers(id) ON DELETE CASCADE,
     notes TEXT,
+    skills TEXT[] NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -39,7 +39,6 @@ func (a *authController) Register(ctx *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(user)
 
 	if err := user.ValidateUser(); err != nil {
 		ctx.JSON(400, gin.H{

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -33,9 +34,10 @@ func (c *careerController) Save(ctx *gin.Context) {
 		})
 		return
 	}
-	career.EndDate = career.StartDate.AddDate(0, 0, career.ApplicationTime)
+    days , _ := strconv.Atoi(career.ApplicationTime)
+	career.EndDate = career.StartDate.AddDate(0, 0, days)
 
-    err := c.Career.Save(career)
+	err := c.Career.Save(career)
 	if err != nil {
 		ctx.JSON(400, gin.H{
 			"status": "failed",

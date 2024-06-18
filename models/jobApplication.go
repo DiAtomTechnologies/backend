@@ -9,8 +9,9 @@ type JobApplication struct {
 	Email          string    `json:"email"`
 	Phone          string    `json:"phone"`
 	Address        string    `json:"address"`
-	WorkExperience int       `json:"work_experienc"`
+	WorkExperience int       `json:"work_experience"`
 	JobId          string    `json:"jobId"`
 	Notes          string    `json:"notes"`
+    Skills         []string  `json:"skills"`
 	CreatedAt      time.Time `json:"created_at"`
 }

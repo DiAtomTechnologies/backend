@@ -54,7 +54,7 @@ func (c *careerService) GetAllCareers() ([]models.Career, error) {
 	defer query.Close()
 	for query.Next() {
 		var career models.Career
-		var duration sql.NullInt64
+		var duration sql.NullString
 		var durationType sql.NullString
 		err := query.Scan(&career.ID, &career.Title, &career.Location, &career.WorkType, &duration, &durationType, &career.StartDate, &career.EndDate, &career.ApplicationTime)
 		if err != nil {
@@ -62,9 +62,9 @@ func (c *careerService) GetAllCareers() ([]models.Career, error) {
 		}
 
 		if duration.Valid {
-			career.Duration = int(duration.Int64)
+			career.Duration = duration.String
 		} else {
-			career.Duration = 0
+			career.Duration = "0"
 		}
 		if durationType.Valid {
 			career.DurationType = durationType.String
@@ -89,7 +89,7 @@ func (c *careerService) GetCareer(id string) (models.Career, error) {
 	query := c.Db.QueryRow("SELECT * FROM CAREERS WHERE ID = $1", id)
 
 	var career models.Career
-	var duration sql.NullInt64
+	var duration sql.NullString
 	var durationType sql.NullString
 	err := query.Scan(&career.ID, &career.Title, &career.Location, &career.WorkType, &career.Description, &duration, &durationType, &career.StartDate, &career.EndDate, &career.ApplicationTime)
 	if err != nil {
@@ -97,6 +97,15 @@ func (c *careerService) GetCareer(id string) (models.Career, error) {
 			return models.Career{}, fmt.Errorf("user with ID %s not found", id)
 		}
 		return models.Career{}, err
+	}
+
+     if duration.Valid {
+		career.Duration = duration.String
+	}else{
+      career.Duration = "0"
+    }
+	if durationType.Valid {
+		career.DurationType = durationType.String
 	}
 	return career, nil
 }

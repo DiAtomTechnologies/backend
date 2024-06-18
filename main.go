@@ -35,8 +35,9 @@ func init() {
 	passwd := os.Getenv("PASSWD")
 	hostDB := os.Getenv("HOSTDB")
 	dbName := os.Getenv("DBNAME")
+    port := os.Getenv("PORT")
 
-	database = db.Connectdb(username, passwd, hostDB, dbName)
+	database = db.Connectdb(username, passwd, hostDB, dbName, port)
 	careerService = services.NewCareerService(database)
 	careerController = controllers.NewCareerController(careerService)
 	blogService = services.NewBlogService(database)
