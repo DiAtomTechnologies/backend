@@ -35,7 +35,7 @@ func init() {
 	passwd := os.Getenv("PASSWD")
 	hostDB := os.Getenv("HOSTDB")
 	dbName := os.Getenv("DBNAME")
-    port := os.Getenv("PORT")
+    port := os.Getenv("DBPORT")
 
 	database = db.Connectdb(username, passwd, hostDB, dbName, port)
 	careerService = services.NewCareerService(database)
@@ -92,7 +92,12 @@ func main() {
 
 	router.POST("/application", applicationController.Save)
 
-	if err := router.Run(":8080"); err != nil {
+    appPort := os.Getenv("PORT")
+    if appPort == "" {
+      appPort = "8080"
+    }
+
+    if err := router.Run(":" + appPort); err != nil {
 		log.Fatal("Error occurred", err)
 	}
 }
